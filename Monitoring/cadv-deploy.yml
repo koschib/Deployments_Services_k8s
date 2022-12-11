@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cadv-deploy
+  namespace: monitoring
+  labels:
+    app: cadv-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cadv-deploy
+  template:
+    metadata:
+      labels:
+        app: cadv-deploy
+    spec:
+      containers:
+      - name: cadv-deploy
+        image: gcr.io/google-containers/cadvisor:v0.36.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 36200
+          protocol: TCP
+        volumeMounts:
+        - name: rootfs
+          mountPath: /rootfs
+          readOnly: true
+        - name: var-run
+          mountPath: /var/run
+          readOnly: false
+        - name: sys
+          mountPath: /sys
+          readOnly: true
+        - name: docker
+          mountPath: /var/lib/docker
+          readOnly: true
+        - name: cgroup
+          mountPath: /cgroup
+          readOnly: true
+      volumes:
+      - name: rootfs
+        hostPath:
+          path: /
+      - name: var-run
+        hostPath:
+          path: /var/run
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: docker
+        hostPath:
+          path: /var/lib/docker
+      - name: cgroup
+        hostPath:
+          path: /cgroup

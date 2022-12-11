@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cadv-service
+  namespace: monitoring
+  labels:
+    app: cadv-service
+spec:
+  selector:
+    app: cadv-deploy
+  ports:
+  - protocol: TCP
+    port: 36200
+    targetPort: 36200
+    name: cadv-service
+
