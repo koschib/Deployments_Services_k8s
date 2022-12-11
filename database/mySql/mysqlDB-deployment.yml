@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysqlDB-deployment
+  labels:
+    app: mysqlDB-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysqlDB-deployment
+  template:
+    metadata:
+      labels:
+        app: mysqlDB-deployment
+    spec:
+      containers:
+      - name: mysqlDB-deployment
+        image: mysql:5.7
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "password"
+        - name: MYSQL_DATABASE
+          value: "mydb"
+        - name: MYSQL_USER
+          value: "user"
+        - name: MYSQL_PASSWORD
+          value: "password"
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
